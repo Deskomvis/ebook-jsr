@@ -137,7 +137,7 @@ export default function App() {
       </nav>
 
       {/* Magazine Container */}
-      <div id="magazine-content" className="relative w-full h-full flex items-center justify-center perspective-[2000px] px-2 sm:px-4 md:px-0 py-2 md:py-0">
+      <div id="magazine-content" className="relative w-full h-full flex items-start md:items-center justify-center perspective-[2000px] px-2 sm:px-4 md:px-0 py-0 md:py-0">
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
             key={pageIndex}

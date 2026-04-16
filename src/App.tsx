@@ -123,23 +123,16 @@ export default function App() {
       </div>
 
       {/* Top Navigation */}
-      <nav className="absolute top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 md:py-6 flex justify-end items-center pointer-events-none">
+      {/* Top Navigation - Hidden on mobile, visible on desktop */}
+      <nav className="hidden md:flex absolute top-0 left-0 right-0 z-50 px-8 py-6 justify-end items-center pointer-events-none">
         
         {/* Right Nav Icons */}
-        <div className="flex items-center gap-4 md:gap-8 pointer-events-auto">
-          <div className="hidden sm:flex items-center gap-4 md:gap-6">
+        <div className="flex items-center gap-8 pointer-events-auto">
+          <div className="flex items-center gap-6">
             <button className="text-gray-600 hover:text-[#2d5a27] transition-colors focus:outline-none focus:ring-2 focus:ring-[#2d5a27] p-1 rounded" aria-label="Bagikan"><Share2 className="w-5 h-5" /></button>
             <button className="text-gray-600 hover:text-[#2d5a27] transition-colors focus:outline-none focus:ring-2 focus:ring-[#2d5a27] p-1 rounded" aria-label="Unduh"><Download className="w-5 h-5" /></button>
             <button className="text-gray-600 hover:text-[#2d5a27] transition-colors focus:outline-none focus:ring-2 focus:ring-[#2d5a27] p-1 rounded" aria-label="Layar Penuh"><Maximize2 className="w-5 h-5" /></button>
           </div>
-          <button 
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center border border-[#2d5a27]/30 hover:border-[#2d5a27] transition-colors focus:outline-none focus:ring-2 focus:ring-[#2d5a27]"
-            aria-label={isMenuOpen ? "Tutup Menu" : "Buka Menu"}
-            aria-expanded={isMenuOpen}
-          >
-            <Menu className="w-5 h-5 md:w-6 md:h-6 text-[#2d5a27]" />
-          </button>
         </div>
       </nav>
 
@@ -249,65 +242,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* Sidebar Menu */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <>
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsMenuOpen(false)}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60]"
-              aria-hidden="true"
-            />
-            <motion.div 
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 bottom-0 w-full max-w-md bg-white border-l border-[#2d5a27]/30 z-[70] p-12 overflow-y-auto"
-              role="dialog"
-              aria-label="Menu Navigasi"
-            >
-              <div className="flex justify-between items-center mb-16">
-                <span className="font-serif text-3xl text-[#2d5a27] font-bold">Menu</span>
-                <button onClick={() => setIsMenuOpen(false)} className="text-gray-600 hover:text-black focus:outline-none focus:ring-2 focus:ring-[#2d5a27] p-2 rounded" aria-label="Tutup Menu"><ChevronRight className="w-8 h-8" /></button>
-              </div>
-
-              <div className="space-y-12 text-black">
-                <section>
-                  <h2 className="text-sm uppercase tracking-widest text-gray-700 mb-6 font-bold">Navigasi Cepat</h2>
-                  <ul className="space-y-4">
-                    <li onClick={() => goToPage(0)} className="text-2xl font-serif hover:text-[#2d5a27] cursor-pointer transition-colors focus:outline-none focus:text-[#2d5a27] focus:ring-2 focus:ring-[#2d5a27] p-1 rounded" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && goToPage(0)}>Halaman Sampul</li>
-                    <li onClick={() => goToPage(1)} className="text-2xl font-serif hover:text-[#2d5a27] cursor-pointer transition-colors focus:outline-none focus:text-[#2d5a27] focus:ring-2 focus:ring-[#2d5a27] p-1 rounded" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && goToPage(1)}>Filosofi</li>
-                    <li onClick={() => goToPage(2)} className="text-2xl font-serif hover:text-[#2d5a27] cursor-pointer transition-colors focus:outline-none focus:text-[#2d5a27] focus:ring-2 focus:ring-[#2d5a27] p-1 rounded" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && goToPage(2)}>Daftar Isi</li>
-                  </ul>
-                </section>
-
-                <section>
-                  <h2 className="text-sm uppercase tracking-widest text-gray-700 mb-6 font-bold">Kategori</h2>
-                  <div className="grid grid-cols-2 gap-3">
-                    {CATEGORIES.map(cat => (
-                      <button
-                        key={cat.id}
-                        onClick={() => { setFilter(cat.id); goToPage(2); }}
-                        className={`text-left px-4 py-3 border-2 text-xs uppercase tracking-widest transition-all focus:outline-none focus:ring-2 focus:ring-[#2d5a27] font-bold rounded-lg ${
-                          filter === cat.id ? 'bg-[#2d5a27] text-white border-[#2d5a27]' : 'border-black/10 text-gray-700 hover:border-[#2d5a27]'
-                        }`}
-                      >
-                        {cat.name}
-                      </button>
-                    ))}
-                  </div>
-                </section>
-
-
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      {/* Sidebar Menu Removed */}
     </div>
   );
 }
@@ -334,9 +269,9 @@ function PageContent({ page, pageIndex, totalPages, goToPage, searchQuery, setSe
           <motion.div 
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-12 h-12 border border-[#2d5a27] flex items-center justify-center rotate-45 mb-6 md:mb-8 bg-white/80 backdrop-blur-sm"
+            className="w-16 h-16 border border-[#2d5a27] flex items-center justify-center rotate-45 mb-6 md:mb-8 bg-white/80 backdrop-blur-sm"
           >
-            <span className="rotate-[-45deg] text-[#2d5a27] font-serif text-lg font-bold">JH</span>
+            <span className="rotate-[-45deg] text-[#2d5a27] font-serif text-2xl font-bold">JH</span>
           </motion.div>
 
           {/* Main Title Styled like the book */}
@@ -346,11 +281,11 @@ function PageContent({ page, pageIndex, totalPages, goToPage, searchQuery, setSe
             transition={{ delay: 0.4 }}
             className="flex flex-col items-center mb-8 md:mb-12"
           >
-            <h1 className="font-sans font-black text-5xl md:text-8xl uppercase tracking-tight text-[#6b9c43] leading-[0.9]">
+            <h1 className="font-sans font-black text-6xl md:text-8xl uppercase tracking-tight text-[#6b9c43] leading-[0.9]">
               Buku Resep <br />
               JSR
             </h1>
-            <p className="font-serif italic text-lg md:text-2xl text-[#8b4513] mt-4 font-bold">
+            <p className="font-serif text-xl md:text-2xl text-[#8b4513] mt-4 font-bold">
               Hidup Sehat Menebar Manfaat
             </p>
           </motion.div>
@@ -363,7 +298,7 @@ function PageContent({ page, pageIndex, totalPages, goToPage, searchQuery, setSe
             className="w-64 h-64 md:w-96 md:h-96 bg-[#2d5a27] rounded-full flex flex-col items-center justify-center shadow-[0_40px_80px_-15px_rgba(0,0,0,0.4)] border-8 border-white group hover:scale-105 transition-transform duration-500"
           >
             <span className="text-white font-serif text-7xl md:text-9xl font-bold leading-none">200</span>
-            <span className="text-white text-xs md:text-base uppercase tracking-widest font-bold mt-2">Resep Sehat</span>
+            <span className="text-white text-sm md:text-base uppercase tracking-widest font-bold mt-2">Resep Sehat</span>
             <div className="w-16 h-[2px] bg-white/50 my-4" />
             <span className="text-white font-serif text-5xl md:text-7xl font-bold leading-none">JSR</span>
           </motion.div>
@@ -372,7 +307,7 @@ function PageContent({ page, pageIndex, totalPages, goToPage, searchQuery, setSe
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1 }}
-            className="mt-8 text-gray-800 text-xs md:text-sm max-w-xs leading-relaxed font-medium bg-white/30 backdrop-blur-sm p-3 rounded-lg border border-white/20"
+            className="mt-8 text-gray-800 text-sm md:text-sm max-w-xs leading-relaxed font-medium bg-white/30 backdrop-blur-sm p-3 rounded-lg border border-white/20"
           >
             "Sebuah perjalanan terkurasi melalui resep berbasis Al-Qur'an dan Sunnah untuk kesehatan optimal."
           </motion.p>
@@ -388,10 +323,10 @@ function PageContent({ page, pageIndex, totalPages, goToPage, searchQuery, setSe
     return (
       <div className="w-full h-full flex flex-col md:flex-row overflow-hidden">
         <div className="w-full md:w-1/2 h-full p-8 md:p-16 flex flex-col justify-center border-r border-black/10 overflow-y-auto no-scrollbar bg-white">
-          <span className="text-[#2d5a27] text-xs md:text-sm uppercase tracking-[0.4em] mb-4 md:mb-8 font-bold">Pengantar</span>
-          <h2 className="font-serif text-3xl md:text-5xl mb-4 md:mb-8 leading-tight text-black">Alam adalah <br /><span className="italic text-[#2d5a27]">Kemewahan Sejati</span></h2>
+          <span className="text-[#2d5a27] text-sm md:text-sm uppercase tracking-[0.4em] mb-4 md:mb-8 font-bold">Pengantar</span>
+          <h2 className="font-serif text-4xl md:text-5xl mb-4 md:mb-8 leading-tight text-black">Alam adalah <br /><span className="text-[#2d5a27]">Kemewahan Sejati</span></h2>
           
-          <div className="space-y-4 md:space-y-6 text-gray-800 text-base md:text-lg leading-relaxed font-serif italic">
+          <div className="space-y-6 md:space-y-6 text-gray-800 text-xl md:text-lg leading-relaxed font-serif">
             <p>Melalui lisan Rasul-Nya, Allah menjanjikan obat bagi setiap penyakit. Rasulullah sendiri bahkan mencontohkan bagaimana berobat yang sesuai dengan ketentuan syariat, termasuk menggunakan bahan-bahan alami (tanaman dan zat makanan) yang disebutkan dalam Al-Qur'an seperti madu, kurma, zaitun, jahe, labu, dan lain-lain.</p>
             <p>Selain bahan-bahan alami yang disebutkan Al-Qur'an itu, melalui kajian-kajian ilmiah, bahan-bahan alami yang ada di sekitar kita dan bahkan berlimpah di dapur kita, terbukti mengandung khasiat pengobatan yang menakjubkan. Sebutlah kunyit, temu lawak, temu putih, kencut serai, dan lain-lain.</p>
             <p>Buku ini merangkum pendalaman pengobatan Islami berbasiskan Al-Qur'an dan sabda Baginda Rasulullah yang telah dipelajari selama bertahun-tahun. Dari hasil pendalaman tersebut, bahan-bahan alami yang mudah didapatkan ternyata sangat membantu menjaga kesehatan dan menyembuhkan penyakit.</p>
@@ -422,26 +357,26 @@ function PageContent({ page, pageIndex, totalPages, goToPage, searchQuery, setSe
 
   if (page.type === 'toc') {
     return (
-      <div className="w-full h-full flex flex-col p-6 md:p-10 overflow-hidden bg-white">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-4 md:mb-6 gap-3 md:gap-4">
+      <div className="w-full h-full flex flex-col p-8 md:p-10 overflow-hidden bg-white">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 md:mb-6 gap-3 md:gap-4">
           <div>
-            <span className="text-[#2d5a27] text-[10px] md:text-xs uppercase tracking-[0.4em] mb-1 md:mb-2 block font-bold">Perpustakaan</span>
-            <h1 className="font-serif text-3xl md:text-5xl text-black leading-none">Indeks <span className="italic text-[#2d5a27]">Penyembuhan</span></h1>
+            <span className="text-[#2d5a27] text-xs md:text-xs uppercase tracking-[0.4em] mb-1 md:mb-2 block font-bold">Perpustakaan</span>
+            <h1 className="font-serif text-4xl md:text-5xl text-black leading-none">Indeks <span className="italic text-[#2d5a27]">Penyembuhan</span></h1>
           </div>
           <div className="w-full md:w-64 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#2d5a27]" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#2d5a27]" />
             <input 
               type="text" 
               placeholder="Cari resep..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-black/5 border border-[#2d5a27]/30 py-2 pl-10 pr-4 text-xs md:text-sm uppercase tracking-widest focus:outline-none focus:border-[#2d5a27] text-black rounded-lg placeholder:text-gray-500"
+              className="w-full bg-black/5 border border-[#2d5a27]/30 py-3 pl-12 pr-4 text-sm md:text-sm uppercase tracking-widest focus:outline-none focus:border-[#2d5a27] text-black rounded-lg placeholder:text-gray-500"
               aria-label="Cari resep berdasarkan nama atau bahan"
             />
           </div>
         </div>
 
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-x-8 md:gap-x-12 gap-y-2 md:gap-y-3 overflow-y-auto pr-2 md:pr-4 no-scrollbar">
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-x-8 md:gap-x-12 gap-y-4 md:gap-y-3 overflow-y-auto pr-2 md:pr-4 no-scrollbar">
           {recipes.filter(r => filter === 'all' || r.category === filter).map((r, i) => (
             <div 
               key={r.id}
@@ -449,26 +384,26 @@ function PageContent({ page, pageIndex, totalPages, goToPage, searchQuery, setSe
                 const idx = pages.findIndex(p => p.type === 'recipe' && p.data?.id === r.id);
                 if (idx !== -1) goToPage(idx);
               }}
-              className="flex justify-between items-baseline group cursor-pointer border-b border-black/5 pb-1 focus:outline-none focus:border-[#2d5a27] focus:ring-1 focus:ring-[#2d5a27] rounded-sm"
+              className="flex justify-between items-baseline group cursor-pointer border-b border-black/5 pb-2 focus:outline-none focus:border-[#2d5a27] focus:ring-1 focus:ring-[#2d5a27] rounded-sm"
               role="button"
               tabIndex={0}
               onKeyDown={(e) => e.key === 'Enter' && goToPage(3 + i)}
             >
               <div className="flex flex-col">
-                <span className="text-[10px] md:text-[11px] uppercase tracking-widest text-[#2d5a27] font-bold">{r.category}</span>
-                <span className="font-serif text-sm md:text-lg text-gray-900 group-hover:text-[#2d5a27] transition-colors font-bold leading-tight">{r.title}</span>
+                <span className="text-xs md:text-[11px] uppercase tracking-widest text-[#2d5a27] font-bold">{r.category}</span>
+                <span className="font-serif text-lg md:text-lg text-gray-900 group-hover:text-[#2d5a27] transition-colors font-bold leading-tight">{r.title}</span>
               </div>
-              <span className="font-serif text-[10px] md:text-xs text-gray-500 italic font-bold whitespace-nowrap ml-2" aria-label={`Halaman ${i + 4}`}>Hal {i + 4}</span>
+              <span className="font-serif text-xs md:text-xs text-gray-500 italic font-bold whitespace-nowrap ml-2" aria-label={`Halaman ${i + 4}`}>Hal {i + 4}</span>
             </div>
           ))}
         </div>
 
-        <div className="mt-4 md:mt-6 flex gap-2 md:gap-3 overflow-x-auto no-scrollbar pb-1">
+        <div className="mt-6 md:mt-6 flex gap-2 md:gap-3 overflow-x-auto no-scrollbar pb-1">
           {CATEGORIES.map(cat => (
             <button
               key={cat.id}
               onClick={() => setFilter(cat.id)}
-              className={`px-4 md:px-5 py-1.5 md:py-2 border border-black/10 text-[9px] md:text-xs uppercase tracking-[0.15em] whitespace-nowrap transition-all focus:outline-none focus:ring-2 focus:ring-[#2d5a27] rounded-full font-bold ${
+              className={`px-6 md:px-5 py-3 md:py-2 border border-black/10 text-xs md:text-xs uppercase tracking-[0.15em] whitespace-nowrap transition-all focus:outline-none focus:ring-2 focus:ring-[#2d5a27] rounded-full font-bold ${
                 filter === cat.id ? 'bg-[#2d5a27] text-white border-[#2d5a27] shadow-md' : 'border-black/10 text-gray-700 hover:border-[#2d5a27]'
               }`}
             >
@@ -495,20 +430,20 @@ function PageContent({ page, pageIndex, totalPages, goToPage, searchQuery, setSe
           {/* Dark Overlay for better contrast */}
           <div className="absolute inset-0 bg-black/40" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/100 via-black/50 to-black/20" />
-          <div className="absolute bottom-4 md:bottom-24 left-6 md:left-16 right-6 md:right-16">
-            <span className="text-[#a4d46c] text-xs md:text-sm uppercase tracking-[0.4em] mb-2 md:mb-4 block font-bold">Halaman Resep</span>
-            <h1 id={`recipe-title-${r.id}`} className="font-serif text-2xl md:text-6xl leading-tight mb-2 md:mb-6 text-white drop-shadow-2xl font-bold">{r.title}</h1>
-            <p className="text-white font-serif italic text-xs md:text-xl leading-relaxed line-clamp-2 md:line-clamp-none drop-shadow-lg font-bold">
+          <div className="absolute bottom-6 md:bottom-24 left-6 md:left-16 right-6 md:right-16">
+            <span className="text-[#a4d46c] text-sm md:text-sm uppercase tracking-[0.4em] mb-2 md:mb-4 block font-bold">Halaman Resep</span>
+            <h1 id={`recipe-title-${r.id}`} className="font-serif text-3xl md:text-6xl leading-tight mb-2 md:mb-6 text-white drop-shadow-2xl font-bold">{r.title}</h1>
+            <p className="text-white font-serif italic text-sm md:text-xl leading-relaxed line-clamp-2 md:line-clamp-none drop-shadow-lg font-bold">
               "{r.description}"
             </p>
 
             <section aria-label="Manfaat Kesehatan" className="mt-4 md:mt-8">
-              <h2 className="text-[#a4d46c] text-xs md:text-sm uppercase tracking-[0.4em] mb-4 flex items-center gap-4 font-bold">
+              <h2 className="text-[#a4d46c] text-sm md:text-sm uppercase tracking-[0.4em] mb-4 flex items-center gap-4 font-bold">
                 Manfaat <div className="h-[1px] flex-1 bg-[#a4d46c]/30" aria-hidden="true" />
               </h2>
               <div className="flex flex-wrap gap-2 md:gap-3">
                 {r.benefits.map((benefit, i) => (
-                  <span key={i} className="px-3 md:px-5 py-1.5 md:py-2 border border-white/40 bg-white/10 backdrop-blur-md text-white text-[10px] md:text-xs uppercase tracking-widest font-bold rounded-full hover:bg-[#2d5a27] hover:border-[#2d5a27] transition-all cursor-default shadow-lg">
+                  <span key={i} className="px-3 md:px-5 py-2 md:py-2 border border-white/40 bg-white/10 backdrop-blur-md text-white text-xs md:text-xs uppercase tracking-widest font-bold rounded-full hover:bg-[#2d5a27] hover:border-[#2d5a27] transition-all cursor-default shadow-lg">
                     {benefit}
                   </span>
                 ))}
@@ -521,30 +456,30 @@ function PageContent({ page, pageIndex, totalPages, goToPage, searchQuery, setSe
         <div className="w-full md:w-1/2 h-[55%] md:h-full bg-white p-6 md:p-10 overflow-y-auto no-scrollbar border-l border-black/10">
           <div className="space-y-6 md:space-y-8">
             <section aria-label="Bahan-bahan">
-              <h2 className="bg-[#e8f5e9] text-[#1b5e20] text-sm md:text-base uppercase tracking-[0.4em] py-2.5 px-6 mb-3 md:mb-5 flex items-center gap-4 font-bold rounded-md shadow-sm border-l-4 border-[#2d5a27]">
+              <h2 className="bg-[#e8f5e9] text-[#1b5e20] text-base md:text-base uppercase tracking-[0.4em] py-2.5 px-6 mb-3 md:mb-5 flex items-center gap-4 font-bold rounded-md shadow-sm border-l-4 border-[#2d5a27]">
                 Bahan-bahan <div className="h-[2px] flex-1 bg-[#2d5a27]/30" aria-hidden="true" />
               </h2>
-              <ul className="space-y-2 md:space-y-3">
+              <ul className="space-y-3 md:space-y-3">
                 {r.ingredients.map((ing, i) => (
                   <li key={i} className="flex items-start gap-3 md:gap-4 group">
                     <div className="w-2.5 h-2.5 rounded-full bg-[#2d5a27] mt-1.5 md:mt-2" aria-hidden="true" />
-                    <span className="text-gray-900 text-sm md:text-base group-hover:text-black transition-colors font-bold">{ing}</span>
+                    <span className="text-gray-900 text-base md:text-base group-hover:text-black transition-colors font-bold">{ing}</span>
                   </li>
                 ))}
               </ul>
             </section>
-
+ 
             <section aria-label="Cara Pembuatan">
-              <h2 className="text-[#2d5a27] text-sm md:text-base uppercase tracking-[0.4em] mb-3 md:mb-6 flex items-center gap-4 font-bold">
+              <h2 className="text-[#2d5a27] text-base md:text-base uppercase tracking-[0.4em] mb-3 md:mb-6 flex items-center gap-4 font-bold">
                 Persiapan <div className="h-[2px] flex-1 bg-[#2d5a27]/30" aria-hidden="true" />
               </h2>
-              <div className="space-y-4 md:space-y-6">
+              <div className="space-y-6 md:space-y-6">
                 {r.preparation.map((step, i) => (
                   <div key={i} className="flex gap-4 md:gap-6 group">
                     <span className="font-serif text-3xl md:text-4xl text-[#2d5a27] opacity-40 group-hover:opacity-100 transition-opacity font-bold" aria-hidden="true">
                       {String(i + 1).padStart(2, '0')}
                     </span>
-                    <p className="text-gray-900 text-sm md:text-base leading-relaxed pt-1 md:pt-1.5 group-hover:text-black transition-colors font-bold">
+                    <p className="text-gray-900 text-base md:text-base leading-relaxed pt-1 md:pt-1.5 group-hover:text-black transition-colors font-bold">
                       {step}
                     </p>
                   </div>

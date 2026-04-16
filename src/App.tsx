@@ -162,7 +162,7 @@ export default function App() {
                 nextPage();
               }
             }}
-            className="relative w-full aspect-[0.7/1] md:aspect-auto md:w-full md:h-full md:max-w-none bg-white md:shadow-none shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] flex overflow-hidden border border-black/5 touch-none md:pb-28"
+            className="relative w-full h-full md:aspect-auto md:w-full md:h-full md:max-w-none bg-white md:shadow-none shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] flex overflow-hidden border border-black/5 touch-none md:pb-28"
             aria-live="polite"
           >
             {/* Spine Shadow (Removed as per user request) */}
@@ -185,59 +185,41 @@ export default function App() {
             />
           </motion.div>
         </AnimatePresence>
-
-        {/* Navigation Arrows (Mobile Only) */}
-        <button 
-          onClick={prevPage}
-          disabled={pageIndex === 0}
-          className="md:hidden absolute left-2 w-10 h-10 flex items-center justify-center bg-white/90 shadow-lg rounded-full disabled:opacity-0 z-50 focus:outline-none"
-          aria-label="Halaman Sebelumnya"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-        <button 
-          onClick={nextPage}
-          disabled={pageIndex === totalPages - 1}
-          className="md:hidden absolute right-2 w-10 h-10 flex items-center justify-center bg-white/90 shadow-lg rounded-full disabled:opacity-0 z-50 focus:outline-none"
-          aria-label="Halaman Berikutnya"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
       </div>
 
-      {/* Progress Bar (Compact) */}
-      <div className="absolute bottom-4 left-4 right-4 md:left-0 md:right-0 px-6 md:px-12 py-3 md:py-4 flex flex-col items-center gap-1 md:gap-2 z-[50] bg-white/20 backdrop-blur-md rounded-2xl border border-white/30 shadow-lg md:bg-transparent md:backdrop-blur-none md:border-none md:shadow-none md:bottom-0">
+      {/* Floating Navigation Bar */}
+      <div className="absolute bottom-6 left-6 right-6 md:left-0 md:right-0 px-6 md:px-12 py-3 md:py-4 flex flex-col items-center gap-3 md:gap-2 z-[50] bg-white/80 md:bg-transparent backdrop-blur-xl md:backdrop-blur-none rounded-2xl md:rounded-none border border-white/50 md:border-none shadow-2xl md:shadow-none md:bottom-0">
         <div className="w-full max-w-xl h-2 bg-black/10 relative rounded-full overflow-hidden" role="progressbar" aria-valuenow={pageIndex + 1} aria-valuemin={1} aria-valuemax={totalPages}>
-          <motion.div 
+           <motion.div 
             className="absolute top-0 left-0 h-full bg-[#2d5a27]"
             initial={false}
             animate={{ width: `${((pageIndex + 1) / totalPages) * 100}%` }}
           />
         </div>
-        <div className="flex items-center gap-4 md:gap-8 text-xs md:text-sm uppercase tracking-[0.3em] text-gray-700 font-bold">
-          {/* Desktop Nav Arrows (Integrated) */}
+        <div className="flex items-center justify-between md:justify-center w-full md:w-auto gap-2 md:gap-8 text-xs md:text-sm uppercase tracking-[0.3em] text-gray-800 md:text-gray-700 font-bold">
+          {/* Nav Arrows (Integrated) */}
           <button 
             onClick={prevPage}
             disabled={pageIndex === 0}
-            className="hidden md:flex items-center justify-center w-10 h-10 rounded-full border border-black/10 hover:bg-[#2d5a27] hover:text-white disabled:opacity-20 transition-all focus:outline-none"
+            className="flex items-center justify-center w-10 h-10 md:w-10 md:h-10 rounded-full border border-black/20 hover:bg-[#2d5a27] hover:text-white disabled:opacity-20 transition-all focus:outline-none bg-white md:bg-transparent shadow-sm md:shadow-none shrink-0"
             aria-label="Sebelumnya"
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft className="w-5 h-5 shrink-0" />
           </button>
-
-          <div className="flex items-center gap-4">
-            <span>Halaman {pageIndex + 1}</span>
+ 
+          <div className="flex items-center justify-center gap-2 md:gap-4 flex-1">
+            <span className="whitespace-nowrap">Hal {pageIndex + 1}</span>
             <span className="text-[#2d5a27]" aria-hidden="true">/</span>
-            <span>{totalPages}</span>
+            <span className="whitespace-nowrap">{totalPages}</span>
           </div>
-
+ 
           <button 
             onClick={nextPage}
             disabled={pageIndex === totalPages - 1}
-            className="hidden md:flex items-center justify-center w-10 h-10 rounded-full border border-black/10 hover:bg-[#2d5a27] hover:text-white disabled:opacity-20 transition-all focus:outline-none"
+            className="flex items-center justify-center w-10 h-10 md:w-10 md:h-10 rounded-full border border-black/20 hover:bg-[#2d5a27] hover:text-white disabled:opacity-20 transition-all focus:outline-none bg-white md:bg-transparent shadow-sm md:shadow-none shrink-0"
             aria-label="Berikutnya"
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight className="w-5 h-5 shrink-0" />
           </button>
         </div>
       </div>
@@ -420,24 +402,25 @@ function PageContent({ page, pageIndex, totalPages, goToPage, searchQuery, setSe
     return (
       <article className="w-full h-full flex flex-col md:flex-row" aria-labelledby={`recipe-title-${r.id}`}>
         {/* Left Page: Visuals & Intro */}
-        <div className="w-full md:w-1/2 h-[50%] md:h-full relative overflow-hidden group border-b md:border-b-0 border-black/10 bg-black">
+        <div className="w-full md:w-1/2 h-[55%] md:h-full relative overflow-hidden group border-b md:border-b-0 border-black/10 bg-black">
           <img 
             src={recipeBg} 
             alt={`Foto bahan herbal untuk resep ${r.title}`} 
-            className="w-full h-full object-cover transition-all duration-1000 scale-110 group-hover:scale-100 blur-[3px] opacity-70"
+            className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 scale-110 group-hover:scale-100 blur-[3px] opacity-70 z-0"
             referrerPolicy="no-referrer"
           />
-          {/* Dark Overlay for better contrast */}
-          <div className="absolute inset-0 bg-black/40" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/100 via-black/50 to-black/20" />
-          <div className="absolute top-6 md:top-auto md:bottom-24 left-6 md:left-16 right-6 md:right-16">
-            <span className="text-[#a4d46c] text-sm md:text-sm uppercase tracking-[0.4em] mb-2 md:mb-4 block font-bold">Halaman Resep</span>
-            <h1 id={`recipe-title-${r.id}`} className="font-serif text-3xl md:text-6xl leading-tight mb-2 md:mb-6 text-white drop-shadow-2xl font-bold">{r.title}</h1>
-            <p className="text-white font-serif italic text-sm md:text-xl leading-relaxed line-clamp-2 md:line-clamp-none drop-shadow-lg font-bold">
-              "{r.description}"
+           {/* Dark Overlay for better contrast */}
+          <div className="absolute inset-0 bg-black/40 z-[5]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/100 via-black/50 to-black/20 z-[5]" />
+          
+          <div className="relative z-10 w-full h-full flex flex-col justify-start md:justify-end p-6 md:p-16 overflow-y-auto no-scrollbar">
+            <span className="text-[#a4d46c] text-sm md:text-sm uppercase tracking-[0.4em] mb-2 md:mb-4 block font-bold shrink-0">Halaman Resep</span>
+            <h1 id={`recipe-title-${r.id}`} className="font-serif text-3xl md:text-6xl leading-tight mb-2 md:mb-6 text-white drop-shadow-2xl font-bold shrink-0">{r.title}</h1>
+            <p className="text-white font-serif italic text-sm md:text-xl leading-relaxed drop-shadow-lg font-bold shrink-0">
+               "{r.description}"
             </p>
-
-            <section aria-label="Manfaat Kesehatan" className="mt-4 md:mt-8">
+ 
+             <section aria-label="Manfaat Kesehatan" className="mt-4 md:mt-8 shrink-0 pb-4">
               <h2 className="text-[#a4d46c] text-sm md:text-sm uppercase tracking-[0.4em] mb-4 flex items-center gap-4 font-bold">
                 Manfaat <div className="h-[1px] flex-1 bg-[#a4d46c]/30" aria-hidden="true" />
               </h2>
@@ -451,9 +434,9 @@ function PageContent({ page, pageIndex, totalPages, goToPage, searchQuery, setSe
             </section>
           </div>
         </div>
-
+ 
         {/* Right Page: Details */}
-        <div className="w-full md:w-1/2 h-[50%] md:h-full bg-white p-6 md:p-10 overflow-y-auto no-scrollbar border-l border-black/10">
+        <div className="w-full md:w-1/2 h-[45%] md:h-full bg-white p-6 md:p-10 pb-32 md:pb-10 overflow-y-auto no-scrollbar border-l border-black/10">
           <div className="space-y-6 md:space-y-8">
             <section aria-label="Bahan-bahan">
               <h2 className="bg-[#e8f5e9] text-[#1b5e20] text-base md:text-base uppercase tracking-[0.4em] py-2.5 px-6 mb-3 md:mb-5 flex items-center gap-4 font-bold rounded-md shadow-sm border-l-4 border-[#2d5a27]">

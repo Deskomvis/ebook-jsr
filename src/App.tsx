@@ -52,6 +52,7 @@ export default function App() {
 
   // Flatten pages for the flipbook
   const pages = useMemo(() => {
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
     const filtered = recipes.filter(r => {
       const matchesFilter = filter === 'all' || r.category === filter;
       const matchesSearch = r.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -59,13 +60,23 @@ export default function App() {
       return matchesFilter && matchesSearch;
     });
 
-    return [
+    const pageList = [
       { type: 'cover' },
       { type: 'intro' },
-      { type: 'toc' },
-      ...filtered.map(r => ({ type: 'recipe', data: r })),
-      { type: 'back-cover' }
+      { type: 'toc' }
     ];
+
+    filtered.forEach(r => {
+      if (isMobile) {
+        pageList.push({ type: 'recipe-intro', data: r });
+        pageList.push({ type: 'recipe-details', data: r });
+      } else {
+        pageList.push({ type: 'recipe', data: r });
+      }
+    });
+
+    pageList.push({ type: 'back-cover' });
+    return pageList;
   }, [filter, searchQuery]);
 
   const totalPages = pages.length;
@@ -193,7 +204,7 @@ export default function App() {
           />
         </div>
         <div className="flex items-center justify-between md:justify-center w-full md:w-auto gap-2 md:gap-8 text-xs md:text-sm uppercase tracking-[0.3em] text-gray-800 md:text-gray-700 font-bold">
-          {/* Nav Arrows (Integrated) */}
+          {/* Nav Arrows */}
           <button 
             onClick={prevPage}
             disabled={pageIndex === 0}
@@ -393,30 +404,29 @@ function PageContent({ page, pageIndex, totalPages, goToPage, searchQuery, setSe
     );
   }
 
-  if (page.type === 'recipe') {
+  if (page.type === 'recipe' || page.type === 'recipe-intro') {
     const r = page.data as Recipe;
     return (
-      <article className="w-full h-full flex flex-col md:flex-row" aria-labelledby={`recipe-title-${r.id}`}>
+      <article className="w-full h-full flex flex-col md:flex-row bg-black" aria-labelledby={`recipe-title-${r.id}`}>
         {/* Left Page: Visuals & Intro */}
-        <div className="w-full md:w-1/2 h-[55%] md:h-full relative overflow-hidden group border-b md:border-b-0 border-black/10 bg-black">
+        <div className="w-full md:w-1/2 h-full md:h-full relative overflow-hidden group">
           <img 
             src={recipeBg} 
             alt={`Foto bahan herbal untuk resep ${r.title}`} 
             className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 scale-110 group-hover:scale-100 blur-[3px] opacity-70 z-0"
             referrerPolicy="no-referrer"
           />
-           {/* Dark Overlay for better contrast */}
           <div className="absolute inset-0 bg-black/40 z-[5]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/100 via-black/50 to-black/20 z-[5]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/20 z-[5]" />
           
-          <div className="relative z-10 w-full h-full flex flex-col justify-start md:justify-end p-6 md:p-16 overflow-y-auto no-scrollbar">
+          <div className="relative z-10 w-full h-full flex flex-col justify-start md:justify-end p-6 md:p-16 overflow-y-auto no-scrollbar pt-12 md:pt-16">
             <span className="text-[#a4d46c] text-sm md:text-sm uppercase tracking-[0.4em] mb-2 md:mb-4 block font-bold shrink-0">Halaman Resep</span>
             <h1 id={`recipe-title-${r.id}`} className="font-serif text-3xl md:text-6xl leading-tight mb-2 md:mb-6 text-white drop-shadow-2xl font-bold shrink-0">{r.title}</h1>
             <p className="text-white font-serif italic text-sm md:text-xl leading-relaxed drop-shadow-lg font-bold shrink-0">
                "{r.description}"
             </p>
  
-             <section aria-label="Manfaat Kesehatan" className="mt-4 md:mt-8 shrink-0 pb-4">
+             <section aria-label="Manfaat Kesehatan" className="mt-8 md:mt-8 shrink-0 pb-32 md:pb-0">
               <h2 className="text-[#a4d46c] text-sm md:text-sm uppercase tracking-[0.4em] mb-4 flex items-center gap-4 font-bold">
                 Manfaat <div className="h-[1px] flex-1 bg-[#a4d46c]/30" aria-hidden="true" />
               </h2>
@@ -431,47 +441,21 @@ function PageContent({ page, pageIndex, totalPages, goToPage, searchQuery, setSe
           </div>
         </div>
  
-        {/* Right Page: Details */}
-        <div className="w-full md:w-1/2 h-[45%] md:h-full bg-white p-6 md:p-10 pb-32 md:pb-10 overflow-y-auto no-scrollbar border-l border-black/10">
-          <div className="space-y-6 md:space-y-8">
-            <section aria-label="Bahan-bahan">
-              <h2 className="bg-[#e8f5e9] text-[#1b5e20] text-base md:text-base uppercase tracking-[0.4em] py-2.5 px-6 mb-3 md:mb-5 flex items-center gap-4 font-bold rounded-md shadow-sm border-l-4 border-[#2d5a27]">
-                Bahan-bahan <div className="h-[2px] flex-1 bg-[#2d5a27]/30" aria-hidden="true" />
-              </h2>
-              <ul className="space-y-3 md:space-y-3">
-                {r.ingredients.map((ing, i) => (
-                  <li key={i} className="flex items-start gap-3 md:gap-4 group">
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#2d5a27] mt-1.5 md:mt-2" aria-hidden="true" />
-                    <span className="text-gray-900 text-base md:text-base group-hover:text-black transition-colors font-bold">{ing}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
- 
-            <section aria-label="Cara Pembuatan">
-              <h2 className="text-[#2d5a27] text-base md:text-base uppercase tracking-[0.4em] mb-3 md:mb-6 flex items-center gap-4 font-bold">
-                Persiapan <div className="h-[2px] flex-1 bg-[#2d5a27]/30" aria-hidden="true" />
-              </h2>
-              <div className="space-y-6 md:space-y-6">
-                {r.preparation.map((step, i) => (
-                  <div key={i} className="flex gap-4 md:gap-6 group">
-                    <span className="font-serif text-3xl md:text-4xl text-[#2d5a27] opacity-40 group-hover:opacity-100 transition-opacity font-bold" aria-hidden="true">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <p className="text-gray-900 text-base md:text-base leading-relaxed pt-1 md:pt-1.5 group-hover:text-black transition-colors font-bold">
-                      {step}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <div className="pt-4 md:pt-6 border-t border-black/10 flex justify-between items-center opacity-60">
-              <span className="text-xs md:text-sm uppercase tracking-widest text-gray-800 font-bold">Referensi: {r.originalTitle}</span>
-              <BookOpen className="w-6 h-6 text-[#2d5a27]" aria-hidden="true" />
-            </div>
+        {/* Desktop View Right Page - Hidden on mobile split */}
+        {!pages.some((p: any) => p.type === 'recipe-intro') && (
+          <div className="hidden md:block w-full md:w-1/2 h-full bg-white p-6 md:p-10 overflow-y-auto no-scrollbar border-l border-black/10">
+            <RecipeDetailsContent r={r} />
           </div>
-        </div>
+        )}
+      </article>
+    );
+  }
+
+  if (page.type === 'recipe-details') {
+    const r = page.data as Recipe;
+    return (
+      <article className="w-full h-full bg-white p-6 md:p-10 overflow-y-auto no-scrollbar">
+        <RecipeDetailsContent r={r} />
       </article>
     );
   }
@@ -502,4 +486,46 @@ function PageContent({ page, pageIndex, totalPages, goToPage, searchQuery, setSe
   }
 
   return null;
+}
+function RecipeDetailsContent({ r }: { r: Recipe }) {
+  return (
+    <div className="space-y-6 md:space-y-8 pb-32 md:pb-0">
+      <section aria-label="Bahan-bahan">
+        <h2 className="bg-[#e8f5e9] text-[#1b5e20] text-base md:text-base uppercase tracking-[0.4em] py-2.5 px-6 mb-3 md:mb-5 flex items-center gap-4 font-bold rounded-md shadow-sm border-l-4 border-[#2d5a27]">
+          Bahan-bahan <div className="h-[2px] flex-1 bg-[#2d5a27]/30" aria-hidden="true" />
+        </h2>
+        <ul className="space-y-3 md:space-y-3">
+          {r.ingredients.map((ing, i) => (
+            <li key={i} className="flex items-start gap-3 md:gap-4 group">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#2d5a27] mt-1.5 md:mt-2" aria-hidden="true" />
+              <span className="text-gray-900 text-base md:text-base group-hover:text-black transition-colors font-bold">{ing}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section aria-label="Cara Pembuatan">
+        <h2 className="text-[#2d5a27] text-base md:text-base uppercase tracking-[0.4em] mb-3 md:mb-6 flex items-center gap-4 font-bold">
+          Persiapan <div className="h-[2px] flex-1 bg-[#2d5a27]/30" aria-hidden="true" />
+        </h2>
+        <div className="space-y-6 md:space-y-6">
+          {r.preparation.map((step, i) => (
+            <div key={i} className="flex gap-4 md:gap-6 group">
+              <span className="font-serif text-3xl md:text-4xl text-[#2d5a27] opacity-40 group-hover:opacity-100 transition-opacity font-bold" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <p className="text-gray-900 text-base md:text-base leading-relaxed pt-1 md:pt-1.5 group-hover:text-black transition-colors font-bold">
+                {step}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="pt-4 md:pt-6 border-t border-black/10 flex justify-between items-center opacity-60">
+        <span className="text-xs md:text-sm uppercase tracking-widest text-gray-800 font-bold">Referensi: {r.originalTitle}</span>
+        <BookOpen className="w-6 h-6 text-[#2d5a27]" aria-hidden="true" />
+      </div>
+    </div>
+  );
 }

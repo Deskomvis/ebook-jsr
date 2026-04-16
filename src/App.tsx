@@ -15,6 +15,7 @@ import {
   BookOpen,
   Search,
   Maximize2,
+  Minimize2,
   Share2,
   Download
 } from 'lucide-react';
@@ -38,6 +39,69 @@ export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState('all');
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // Fullscreen toggle
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {});
+    } else {
+      document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {});
+    }
+  };
+
+  // Listen for fullscreen changes (e.g. user presses Escape)
+  useEffect(() => {
+    const onFsChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', onFsChange);
+    return () => document.removeEventListener('fullscreenchange', onFsChange);
+  }, []);
+
+  // Download current recipe as a text file
+  const downloadRecipe = (pages: any[], pageIndex: number) => {
+    const page = pages[pageIndex];
+    const r = page?.data;
+    if (!r) return;
+    const content = [
+      `RESEP: ${r.title}`,
+      `Deskripsi: ${r.description}`,
+      ``,
+      `MANFAAT:`,
+      ...(r.benefits || []).map((b: string) => `- ${b}`),
+      ``,
+      `BAHAN-BAHAN:`,
+      ...(r.ingredients || []).map((ing: string) => `- ${ing}`),
+      ``,
+      `CARA PEMBUATAN:`,
+      ...(r.preparation || []).map((step: string, i: number) => `${i + 1}. ${step}`),
+      ``,
+      `Referensi: ${r.originalTitle}`,
+    ].join('\n');
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${r.title.replace(/\s+/g, '-')}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Share current page URL
+  const shareRecipe = async (pages: any[], pageIndex: number) => {
+    const page = pages[pageIndex];
+    const r = page?.data;
+    const title = r ? `Resep: ${r.title}` : 'Buku Resep Sehat JSR';
+    const text = r ? r.description : 'Buku Resep Sehat berbasis Al-Qur'an dan Sunnah';
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, text, url });
+      } catch (_) {}
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(url).then(() => alert('Link disalin ke clipboard!'));
+    }
+  };
 
   // Keyboard navigation for accessibility
   useEffect(() => {
@@ -130,16 +194,15 @@ export default function App() {
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]" />
       </div>
 
-      {/* Top Navigation */}
-      {/* Top Navigation - Hidden on mobile, visible on desktop */}
       <nav className="hidden md:flex absolute top-0 left-0 right-0 z-50 px-8 py-6 justify-end items-center pointer-events-none">
-        
         {/* Right Nav Icons */}
         <div className="flex items-center gap-8 pointer-events-auto">
           <div className="flex items-center gap-6">
-            <button className="text-gray-600 hover:text-[#2d5a27] transition-colors focus:outline-none focus:ring-2 focus:ring-[#2d5a27] p-1 rounded" aria-label="Bagikan"><Share2 className="w-5 h-5" /></button>
-            <button className="text-gray-600 hover:text-[#2d5a27] transition-colors focus:outline-none focus:ring-2 focus:ring-[#2d5a27] p-1 rounded" aria-label="Unduh"><Download className="w-5 h-5" /></button>
-            <button className="text-gray-600 hover:text-[#2d5a27] transition-colors focus:outline-none focus:ring-2 focus:ring-[#2d5a27] p-1 rounded" aria-label="Layar Penuh"><Maximize2 className="w-5 h-5" /></button>
+            <button onClick={() => shareRecipe(pages, pageIndex)} className="text-gray-600 hover:text-[#2d5a27] transition-colors focus:outline-none focus:ring-2 focus:ring-[#2d5a27] p-1 rounded" aria-label="Bagikan"><Share2 className="w-5 h-5" /></button>
+            <button onClick={() => downloadRecipe(pages, pageIndex)} className="text-gray-600 hover:text-[#2d5a27] transition-colors focus:outline-none focus:ring-2 focus:ring-[#2d5a27] p-1 rounded" aria-label="Unduh"><Download className="w-5 h-5" /></button>
+            <button onClick={toggleFullscreen} className="text-gray-600 hover:text-[#2d5a27] transition-colors focus:outline-none focus:ring-2 focus:ring-[#2d5a27] p-1 rounded" aria-label={isFullscreen ? 'Keluar Layar Penuh' : 'Layar Penuh'}>
+              {isFullscreen ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
+            </button>
           </div>
         </div>
       </nav>

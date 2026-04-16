@@ -302,37 +302,7 @@ export default function App() {
                   </div>
                 </section>
 
-                <section>
-                  <h2 className="text-sm uppercase tracking-widest text-gray-700 mb-6 font-bold">Resep Terbaru</h2>
-                  <div className="space-y-4">
-                    {recipes.slice(0, 3).map(r => (
-                      <div 
-                        key={r.id}
-                        onClick={() => {
-                          const idx = pages.findIndex(p => p.type === 'recipe' && p.data?.id === r.id);
-                          if (idx !== -1) goToPage(idx);
-                        }}
-                        className="flex gap-4 group cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#2d5a27] p-2 rounded-lg hover:bg-gray-50 transition-colors"
-                        role="button"
-                        tabIndex={0}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            const idx = pages.findIndex(p => p.type === 'recipe' && p.data?.id === r.id);
-                            if (idx !== -1) goToPage(idx);
-                          }
-                        }}
-                      >
-                        <div className="w-16 h-16 bg-white/5 overflow-hidden rounded-md border border-black/10">
-                          <img src={`https://picsum.photos/seed/${r.id}/100/100`} alt={`Thumbnail resep ${r.title}`} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
-                        </div>
-                        <div className="flex flex-col justify-center">
-                          <span className="text-base md:text-lg font-serif group-hover:text-[#2d5a27] transition-colors font-bold">{r.title}</span>
-                          <span className="text-xs uppercase tracking-widest text-[#2d5a27] mt-1 font-bold">{r.category}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </section>
+
               </div>
             </motion.div>
           </>
@@ -515,7 +485,7 @@ function PageContent({ page, pageIndex, totalPages, goToPage, searchQuery, setSe
     return (
       <article className="w-full h-full flex flex-col md:flex-row" aria-labelledby={`recipe-title-${r.id}`}>
         {/* Left Page: Visuals & Intro */}
-        <div className="w-full md:w-1/2 h-1/3 md:h-full relative overflow-hidden group border-b md:border-b-0 border-black/10 bg-black">
+        <div className="w-full md:w-1/2 h-[45%] md:h-full relative overflow-hidden group border-b md:border-b-0 border-black/10 bg-black">
           <img 
             src={recipeBg} 
             alt={`Foto bahan herbal untuk resep ${r.title}`} 
@@ -527,8 +497,8 @@ function PageContent({ page, pageIndex, totalPages, goToPage, searchQuery, setSe
           <div className="absolute inset-0 bg-gradient-to-t from-black/100 via-black/50 to-black/20" />
           <div className="absolute bottom-4 md:bottom-24 left-6 md:left-16 right-6 md:right-16">
             <span className="text-[#a4d46c] text-xs md:text-sm uppercase tracking-[0.4em] mb-2 md:mb-4 block font-bold">Halaman Resep</span>
-            <h1 id={`recipe-title-${r.id}`} className="font-serif text-3xl md:text-6xl leading-tight mb-2 md:mb-6 text-white drop-shadow-2xl font-bold">{r.title}</h1>
-            <p className="text-white font-serif italic text-sm md:text-xl leading-relaxed line-clamp-2 md:line-clamp-none drop-shadow-lg font-bold">
+            <h1 id={`recipe-title-${r.id}`} className="font-serif text-2xl md:text-6xl leading-tight mb-2 md:mb-6 text-white drop-shadow-2xl font-bold">{r.title}</h1>
+            <p className="text-white font-serif italic text-xs md:text-xl leading-relaxed line-clamp-2 md:line-clamp-none drop-shadow-lg font-bold">
               "{r.description}"
             </p>
 
@@ -548,7 +518,7 @@ function PageContent({ page, pageIndex, totalPages, goToPage, searchQuery, setSe
         </div>
 
         {/* Right Page: Details */}
-        <div className="w-full md:w-1/2 h-2/3 md:h-full bg-white p-6 md:p-10 overflow-y-auto no-scrollbar border-l border-black/10">
+        <div className="w-full md:w-1/2 h-[55%] md:h-full bg-white p-6 md:p-10 overflow-y-auto no-scrollbar border-l border-black/10">
           <div className="space-y-6 md:space-y-8">
             <section aria-label="Bahan-bahan">
               <h2 className="bg-[#e8f5e9] text-[#1b5e20] text-sm md:text-base uppercase tracking-[0.4em] py-2.5 px-6 mb-3 md:mb-5 flex items-center gap-4 font-bold rounded-md shadow-sm border-l-4 border-[#2d5a27]">

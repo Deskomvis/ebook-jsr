@@ -94,19 +94,16 @@ export default function App() {
     enter: (direction: number) => ({
       x: direction > 0 ? '100%' : '-100%',
       opacity: 0,
-      rotateY: direction > 0 ? 45 : -45,
     }),
     center: {
       zIndex: 1,
       x: 0,
       opacity: 1,
-      rotateY: 0,
     },
     exit: (direction: number) => ({
       zIndex: 0,
       x: direction < 0 ? '100%' : '-100%',
       opacity: 0,
-      rotateY: direction < 0 ? 45 : -45,
     }),
   };
 
@@ -148,8 +145,7 @@ export default function App() {
             exit="exit"
             transition={{
               x: { type: "spring", stiffness: 300, damping: 30 },
-              opacity: { duration: 0.4 },
-              rotateY: { duration: 0.6 }
+              opacity: { duration: 0.3 }
             }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}

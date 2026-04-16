@@ -162,7 +162,7 @@ export default function App() {
                 nextPage();
               }
             }}
-            className="relative w-full aspect-[0.7/1] md:aspect-auto md:w-full md:h-full md:max-w-none bg-white md:shadow-none shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] flex overflow-hidden border border-black/5 touch-none pb-12 md:pb-28"
+            className="relative w-full aspect-[0.7/1] md:aspect-auto md:w-full md:h-full md:max-w-none bg-white md:shadow-none shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] flex overflow-hidden border border-black/5 touch-none md:pb-28"
             aria-live="polite"
           >
             {/* Spine Shadow (Removed as per user request) */}
@@ -206,7 +206,7 @@ export default function App() {
       </div>
 
       {/* Progress Bar (Compact) */}
-      <div className="absolute bottom-0 left-0 right-0 px-6 md:px-12 py-2 md:py-4 flex flex-col items-center gap-1 md:gap-2 z-[50]">
+      <div className="absolute bottom-4 left-4 right-4 md:left-0 md:right-0 px-6 md:px-12 py-3 md:py-4 flex flex-col items-center gap-1 md:gap-2 z-[50] bg-white/20 backdrop-blur-md rounded-2xl border border-white/30 shadow-lg md:bg-transparent md:backdrop-blur-none md:border-none md:shadow-none md:bottom-0">
         <div className="w-full max-w-xl h-2 bg-black/10 relative rounded-full overflow-hidden" role="progressbar" aria-valuenow={pageIndex + 1} aria-valuemin={1} aria-valuemax={totalPages}>
           <motion.div 
             className="absolute top-0 left-0 h-full bg-[#2d5a27]"
